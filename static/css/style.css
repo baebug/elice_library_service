@@ -1,0 +1,36 @@
+/* 페이지네이션 */
+.pagination {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+.pagination a {
+    text-decoration: none;
+}
+
+.pagination a.endBtn {
+    color: rgba(193, 193, 193, 0.762);
+    cursor: default;
+}
+
+/* 책 목록 */
+.booksList {
+    text-align: center;
+}
+.booksList .num {
+    width: 3rem;
+}
+.booksList .title {
+    width: 35rem;
+}
+.booksList .author {
+    width: 15rem;
+}
+.booksList .pub {
+    width: 15rem;
+}
+.booksList .amount {
+    width: 5rem;
+}

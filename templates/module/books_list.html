@@ -1,0 +1,24 @@
+<table class="table booksList">
+    <thead>
+        <tr>
+        <th scope="col">번호</th>
+        <th scope="col">제목</th>
+        <th scope="col">저자</th>
+        <th scope="col">출판사</th>
+        <th scope="col">보유 권 수</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for book in book_list %}
+        {% if (loop.index <= 8 * page_num) and (loop.index > 8 * (page_num - 1)) %}
+                <tr>
+                <th class="num" scope="row">{{ "%.2d"|format(book.id) }}</th>
+                <td class="title">{{ book.book_name }}</td>
+                <td class="author">{{ book.author }}</td>
+                <td class="pub">{{ book.publisher }}</td>
+                <td class="amount">{{ book.cur_amount }}</td>
+                </tr>
+        {% endif %}
+    {% endfor %}
+    </tbody>
+</table>

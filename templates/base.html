@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{url_for('static',filename='css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{url_for('static',filename='css/style.css')}}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}" > </script>
+    <script src="{{ url_for('static', filename='js/jquery-3.6.0.js') }}" > </script>
+    <title>엘리스 도서관</title>
+    {% block scripts %}
+    {% endblock %}
+</head>
+<body>
+    {% include "layout/header.html" %}
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
