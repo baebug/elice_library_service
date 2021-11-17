@@ -129,5 +129,6 @@ dmypy.json
 .pyre/
 
 key/
+migrations/
 
 .DS_Store
