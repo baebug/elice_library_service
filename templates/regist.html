@@ -19,7 +19,8 @@
 
         $.ajax({
             url: '/regist',
-            type: 'post',
+            type: 'POST',
+            dataType: 'json',
             data: {
                 'user_email': user_email,
                 'user_name': user_name,
@@ -30,7 +31,7 @@
                     alert("회원가입 성공!");
                     window.location.href = '/'
                 } else {
-                    alert("문제있으")
+                    alert("에러", error);
                 }
             }
         })
@@ -40,7 +41,7 @@
 {% block content %}
 <h2 class="title">Elice 회원가입</h2>
 <hr>
-<form class="card">
+<div class="card">
     <div class="card-body">
         <div class="mb-3 row">
             <label class="col-sm-2 col-form-label">E-mail</label>
@@ -69,6 +70,6 @@
         <button class="btn btn-primary" id="registBtn" onclick="regist()">회원가입하기</button>
         <a href="/login" class="btn btn-primary">로그인하기</a>
     </div>
-</form>
+</div>
 <hr>
 {% endblock %}

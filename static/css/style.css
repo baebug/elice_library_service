@@ -25,12 +25,38 @@
 .booksList .title {
     width: 35rem;
 }
+.booksList .title a {
+    text-decoration: none;
+    color: black;
+}
 .booksList .author {
     width: 15rem;
 }
 .booksList .pub {
     width: 15rem;
 }
+.booksList .star {
+    width: 5rem;
+}
 .booksList .amount {
     width: 5rem;
+}
+
+/* 책 상세페이지 */
+.bookDetail {
+    margin: 2rem 7rem;
+}
+.bookDetail .title {
+    /* text-align: center; */
+    margin: 2rem 0;
+}
+.bookDetail img {
+    width: 100%;
+}
+.bookDetail .grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+}
+.bookDetail .grid div{
+    margin-left: 5rem;
 }

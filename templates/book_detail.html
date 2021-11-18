@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block scripts %}
+<script>
+    function writeReview() {
+        let star = $("#star").val()
+        let review = $("#review").val()
+
+        $.ajax({
+            url: "/book/{{ book.id }}",
+            type: "post",
+            data: {
+                "star": star,
+                "review": review
+            },
+            success: function(res) {
+                if (res['result'] == 'success') {
+                    alert("작성 완료")
+                    window.location.reload()
+                } else {
+                    alert("?")
+                }
+            }
+        })
+    }
+</script>
+{% endblock %}
+{% block content %}
+    <div class="bookDetail">
+        <div class="grid">
+            <div class="img">
+                {% with img_src = url_for('static', filename='images/book_img/%s' % book.id) %}
+                <img src="{{ img_src }}.png" onerror="this.src='{{ img_src }}.jpg'" alt="{{ book.book_name }} 표지">
+                {% endwith %}
+            </div>
+            <div class="content">
+                <h2 class="title">{{ book.book_name }}</h2>
+                <p>저자: {{ book.author }}</p>
+                <p>출판사: {{ book.publisher }}</p>
+                <p>출간일: {{ book.publication_date.strftime('%Y-%m-%d') }}</p>
+                <p>쪽수: {{ book.pages }}</p>
+                <p>도서번호: {{ book.isbn }}</p>
+                <p>평점: 4.5 / 5</p>
+                <p>대여: 가능</p>
+            </div>
+        </div>
+        <div class="description">
+            <p>{{ book.description }}</p>
+            <p><a href="{{ book.link }}">구매하러가기</a></p>
+        </div>
+        <div class="reviews">
+            <h2>리뷰</h2>
+            <div lass="reviewForm">
+                <p>
+                    별점
+                    <select name="star" id="star">
+                        <option value="5">5점</option>
+                        <option value="4">4점</option>
+                        <option value="3">3점</option>
+                        <option value="2">2점</option>
+                        <option value="1">1점</option>
+                    </select>
+                </p>
+                <textarea name="review" id="review" cols="100" rows="5"></textarea>
+                <button onclick="writeReview()"> 작성 </button>
+            </div>
+            <div>
+                <div>
+                    <p>배충현</p>
+                    <p>아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ </p>
+                </div>
+                <div>
+                    <p>강봉권</p>
+                    <p>ㄹㅇ 개꿀잼 ㅋㅋ</p>
+                </div>
+                {% for review in review_list %}
+                    <p> {{ review.user_id }} ---------- {{ review.grade }} 점</p>
+                    <p> {{ review.description }} </p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
