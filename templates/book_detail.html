@@ -2,11 +2,22 @@
 {% block scripts %}
 <script>
     function writeReview() {
-        let star = $("#star").val()
-        let review = $("#review").val()
+        let star = $("#star").val();
+        let review = $("#review").val();
+
+        if ("{{ session.get('login') }}" == "None") {
+            alert("로그인 후 작성하실 수 있습니다.");
+            window.location.reload();
+            return ;
+        }
+
+        if (review == '') {
+            alert("리뷰 내용을 입력해주세요.");
+            return ;
+        }
 
         $.ajax({
-            url: "/book/{{ book.id }}",
+            url: "{{ url_for('board.review', book_id='%s' % book.id )}}",
             type: "post",
             data: {
                 "star": star,
@@ -14,13 +25,83 @@
             },
             success: function(res) {
                 if (res['result'] == 'success') {
-                    alert("작성 완료")
-                    window.location.reload()
+                    alert("작성 완료");
+                    window.location.reload();
                 } else {
-                    alert("?")
+                    alert("?");
                 }
             }
         })
+    }
+
+    function borrow() {
+        // book/book_id/borrow 로 요청을 보내면?
+        let result = confirm("정말 대여하시겠습니까?");
+
+        if ("{{ session.get('login') }}" == "None") {
+            alert("로그인 후 이용하실 수 있습니다.");
+            window.location.reload();
+            return ;
+        }
+
+        if ("{{ book.cur_amount }}" == 0) {
+            alert("대여할 책이 없습니다.");
+            window.location.reload();
+            return ;
+        }
+
+        if ("{{ isBorrow }}" == "True") {
+            alert("이미 대여한 책입니다.");
+            window.location.reload();
+            return ;
+        }
+
+        if (result) {
+            $.ajax({
+                url: "{{ url_for('board.borrow', book_id='%s' % book.id) }}",
+                type: "post",
+                success: function(res) {
+                    if(res["result"] == "success") {
+                        alert("대여했습니다.");
+                        window.location.reload();
+                    } else {
+                        alert("대여에 실패했습니다.");
+                    }
+                }
+            })
+        }
+    }
+
+    function returnBook() {
+        let result = confirm("정말 반납하시겠습니까?");
+
+        if ("{{ session.get('login') }}" == "None") {
+            alert("로그인 후 이용하실 수 있습니다.");
+            window.location.reload();
+            return ;
+        }
+
+        if ("{{ isBorrow }}" == "False") {
+            alert("대여하지 않은 책입니다.");
+            window.location.reload();
+            return ;
+        }
+
+        if (result) {
+            // book/book_id/returnBook
+            $.ajax({
+                url: "{{ url_for('board.returnBook', book_id='%s' % book.id) }}",
+                type: "post",
+                success: function(res) {
+                    if(res["result"] == "success") {
+                        alert("반납했습니다.");
+                        window.location.reload();
+                    } else {
+                        alert("반납에 실패했습니다.");
+                    }
+                }
+            })
+        }
     }
 </script>
 {% endblock %}
@@ -39,8 +120,10 @@
                 <p>출간일: {{ book.publication_date.strftime('%Y-%m-%d') }}</p>
                 <p>쪽수: {{ book.pages }}</p>
                 <p>도서번호: {{ book.isbn }}</p>
-                <p>평점: 4.5 / 5</p>
-                <p>대여: 가능</p>
+                <p>평점: {% if avg_grade[1] %}{{ "%.1f"|format(avg_grade[1]) }} / 5{% else %}-{% endif %}</p>
+                <p>대여: {% if book.cur_amount == 0 %}불가능{% else %}가능{% endif %}</p>
+                <button onclick="borrow()">대여하기</button>
+                <button onclick="returnBook()">반납하기</button>
             </div>
         </div>
         <div class="description">
@@ -65,16 +148,14 @@
             </div>
             <div>
                 <div>
-                    <p>배충현</p>
+                    <p>5점 | 배충현 | 21.11.18 </p>
                     <p>아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ </p>
                 </div>
-                <div>
-                    <p>강봉권</p>
-                    <p>ㄹㅇ 개꿀잼 ㅋㅋ</p>
-                </div>
                 {% for review in review_list %}
+                <div>
                     <p> {{ review.user_id }} ---------- {{ review.grade }} 점</p>
                     <p> {{ review.description }} </p>
+                </div>
                 {% endfor %}
             </div>
         </div>

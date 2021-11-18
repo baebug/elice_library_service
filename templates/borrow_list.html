@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+    <table class="table booksList">
+        <thead>
+            <tr>
+            <th scope="col">번호</th>
+            <th scope="col">제목</th>
+            <th scope="col">대여일자</th>
+            <th scope="col">반납일자</th>
+            <th scope="col">상태</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for book in borrow_list %}
+                <tr>
+                <th class="num" scope="row">{{ loop.index }}</th>
+                <td class="title"><a href="{{ url_for('board.book_detail', book_id='%s' % book.id) }}">{{ book.book_name }}</a></td>
+                <td class="author">{{ book.borrow_date.strftime('%Y-%m-%d') }}</td>
+                <td class="pub">{% if book.return_date %}{{ book.return_date.strftime('%Y-%m-%d') }}{% endif %}</td>
+                <td class="star">{% if book.borrowed == True %}대여중{% else %}반납{% endif %}</td>
+                </tr>
+        {% endfor %}
+        </tbody>
+</table>
+{% endblock %}

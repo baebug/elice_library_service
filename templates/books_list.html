@@ -19,7 +19,13 @@
                     <td class="title"><a href="{{ url_for('board.book_detail', book_id='%s' % book.id) }}">{{ book.book_name }}</a></td>
                     <td class="author">{{ book.author }}</td>
                     <td class="pub">{{ book.publisher }}</td>
-                    <td class="star">5</td>
+                    <td class="star">
+                    {% for grade in avg_grade_list %}
+                        {% if grade[0].book_id == book.id %}
+                            {{ grade[1]|round }} 점
+                        {% endif %}
+                    {% endfor %}
+                    </td>
                     <td class="amount">{{ book.cur_amount }}</td>
                     </tr>
             {% endif %}

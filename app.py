@@ -11,6 +11,7 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://root:{flask_pw}@127.0.0.1:3306/elice_library"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.secret_key = secret_key
+    app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 
     db.init_app(app)
     migrate.init_app(app, db)  # Flask-Migrate 객체를 만들기 위해 플라스크 객체와 DB 객체 전달
