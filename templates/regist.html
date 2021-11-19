@@ -2,6 +2,8 @@
 {% block scripts %}
 <script>
     function regist() {
+        const getName = RegExp(/^[ㄱ-ㅎ|가-힣|a-z|A-Z]+$/);
+
         let user_email = $("#userEmail").val()
         let user_name = $("#userName").val()
         let user_pw = $("#userPw").val()
@@ -9,12 +11,19 @@
 
         if (user_email == '' || user_name == '' || user_pw == '') {
             alert("빈칸을 모두 채워주세요.");
-            return;
+            return ;
         }
 
         if (user_pw != user_pw2) {
             alert("비밀번호를 확인 해 주세요!")
-            return;
+            return ;
+        }
+
+        if (!getName.test(user_name)){
+            alert("이름은 한글, 영문으로만 입력해주세요.");
+            $("#userName").val("");
+            $("#userName").focus();
+            return ;
         }
 
         $.ajax({
@@ -29,7 +38,7 @@
             success: function (res) {
                 if (res['result'] == 'success') {
                     alert("회원가입 성공!");
-                    window.location.href = '/'
+                    window.location.href = '/login'
                 } else {
                     alert("에러", error);
                 }
