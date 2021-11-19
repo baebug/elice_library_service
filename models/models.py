@@ -62,6 +62,8 @@ class Review(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     description = db.Column(db.Text, nullable=False)
     grade = db.Column(db.Integer, nullable=False)
+    review_date = db.Column(db.DateTime, default=datetime.utcnow)
+
 
     def __init__(self, book_id, user_id, desc, grade):
         self.book_id = book_id

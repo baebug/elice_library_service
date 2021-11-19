@@ -60,3 +60,8 @@
 .bookDetail .grid div{
     margin-left: 5rem;
 }
+.bookDetail .reviews .review {
+    border: 1px solid black;
+    margin: 1rem 0;
+    padding: 1rem;
+}

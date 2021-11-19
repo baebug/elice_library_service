@@ -103,6 +103,36 @@
             })
         }
     }
+
+    function delReview(event) {
+        let review_id = event.target.attributes.key.value;
+
+        let result = confirm("정말 댓글을 삭제하시겠습니까?");
+
+        if ("{{ session.get('login') }}" == "None") {
+            alert("로그인 후 이용하실 수 있습니다.");
+            window.location.reload();
+            return ;
+        }
+
+        if (result) {
+            $.ajax({
+                url: "{{ url_for('board.review', book_id='%s' % book.id )}}",
+                type: "delete",
+                data: {
+                    "review_id": review_id
+                },
+                success: function(res) {
+                    if(res["result"] == "success") {
+                        alert("댓글이 삭제되었습니다.");
+                        window.location.reload();
+                    } else {
+                        alert("삭제에 실패했습니다.");
+                    }
+                }
+            })
+        }
+    }
 </script>
 {% endblock %}
 {% block content %}
@@ -147,13 +177,9 @@
                 <button onclick="writeReview()"> 작성 </button>
             </div>
             <div>
-                <div>
-                    <p>5점 | 배충현 | 21.11.18 </p>
-                    <p>아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ 아 너무너무 재밌어요~ </p>
-                </div>
                 {% for review in review_list %}
-                <div>
-                    <p> {{ review.user_id }} ---------- {{ review.grade }} 점</p>
+                <div class="review">
+                    <p> {{ review.grade }}점 | {{ review.user_name }} | {{ review.review_date.strftime('%Y-%m-%d') }} {% if session.get("login") == review.user_id %}<button key="{{ review.id }}" onclick="delReview(event)">X</button>{% endif %}</p>
                     <p> {{ review.description }} </p>
                 </div>
                 {% endfor %}

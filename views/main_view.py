@@ -36,7 +36,7 @@ def book_detail(book_id):
 
         book = Book.query.join(BookCount, Book.id == BookCount.book_id).add_columns(Book.id, Book.book_name, Book.author, Book.publisher, Book.publication_date, Book.pages, Book.isbn, Book.description, Book.link, BookCount.cur_amount).filter(Book.id == book_id).first()
         avg_grade = db.session.query(Review, func.avg(Review.grade)).filter(Review.book_id == book_id).first()
-        review_list = Review.query.filter(Review.book_id == book_id).all()
+        review_list = Review.query.join(User, Review.user_id == User.id).add_columns(Review.id, Review.user_id, Review.book_id, Review.grade, Review.description, Review.review_date, User.user_name).filter(Review.book_id == book_id).order_by(Review.review_date.desc()).all()
         _isBorrow = Borrow.query.filter((Borrow.user_id == user_id), (Borrow.book_id == book_id), (Borrow.borrowed == 1)).first()
         if _isBorrow:
             isBorrow = True
@@ -46,7 +46,7 @@ def book_detail(book_id):
         return render_template("book_detail.html", book = book, review_list=review_list, isBorrow=isBorrow, avg_grade=avg_grade)
     
 
-@board.route("/book/<int:book_id>/review", methods=["POST"])
+@board.route("/book/<int:book_id>/review", methods=["POST", "DELETE"])
 def review(book_id):
     if request.method == "POST":
         user_id = session.get("login")
@@ -55,6 +55,13 @@ def review(book_id):
 
         review = Review(book_id, user_id, desc, grade)
         db.session.add(review)
+        db.session.commit()
+        return jsonify({"result": "success"})
+    elif request.method == "DELETE":
+        review_id = request.form["review_id"]
+
+        review = Review.query.filter(Review.id == review_id).first()
+        db.session.delete(review)
         db.session.commit()
         return jsonify({"result": "success"})
 
